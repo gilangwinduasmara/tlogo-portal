@@ -1,3 +1,4 @@
+import DeleteDb from "@/components/delete-db"
 import { Button } from "@workspace/ui/components/button"
 import Link from "next/link"
 
@@ -37,6 +38,11 @@ export default function Page() {
             📰 Warta Tlogo
             <div className="text-xs text-foreground/60">(Coming soon)</div>
           </Button>
+          <DeleteDb>
+            <Button variant={"destructive"} size={"lg"} className="w-full">
+              🗑️ Hapus DB
+            </Button>
+          </DeleteDb>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import service from "./member-service";
 type WargaContextType = {
     list : Member[];
     getList : () => void;
-    addMember : (member: Omit<Member, 'id'>) => void;
+    addMember : (member: Omit<Member, 'id'>) => Promise<Member>;
     updateMember : (member: Member) => void;
     deleteMember : (id: string) => void;
 }
@@ -24,8 +24,9 @@ export const MemberProvider = ({children}: {children: ReactNode}) => {
     }
 
     const addMember = async (member: Omit<Member, 'id'>) => {
-        await service.store(member);
+        const result = await service.store(member);
         getList();
+        return result;
     }
 
     const updateMember = async (member: Member) => {}

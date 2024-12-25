@@ -33,7 +33,7 @@ export default function WargaForm(props: WargaFormProps) {
         defaultValues: model,
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         
@@ -47,14 +47,14 @@ export default function WargaForm(props: WargaFormProps) {
                     ...values
                 });
             }else {
-                addMember(values);
+                const result = await addMember(values);
+                props.onSubmit?.(result);
             }
         }catch(e) {
             console.error(e);
         }finally {
             getList();
             setSubmitting(false);
-            onSubmitProps?.(values);
         }
         
     }

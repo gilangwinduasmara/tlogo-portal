@@ -13,6 +13,7 @@ export default {
         const members = JSON.parse(localStorage.getItem(dbKey) || "[]");
         members.push(member);
         localStorage.setItem(dbKey, JSON.stringify(members));
+        return member;
     },
     findById: (id: string) => {
         const members = JSON.parse(localStorage.getItem(dbKey) || "[]");

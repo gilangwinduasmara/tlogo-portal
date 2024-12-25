@@ -47,6 +47,7 @@ export default function WaterBillForm(props: WaterBillFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: model,
+        shouldUnregister: false,
     })
 
     const waterBill: Partial<WaterBill> = useMemo(() => {
@@ -135,12 +136,12 @@ export default function WaterBillForm(props: WaterBillFormProps) {
                 <FormField
                     control={form.control}
                     name="memberId"
-                    render={({ field }: any) => (
+                    render={({ field }) => (
                         <FormItem>
                             <FormLabel>Pelanggan</FormLabel>
                             <div className="flex items-center gap-3">
                                 <FormControl>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                                         <SelectTrigger className="">
                                             <SelectValue />
                                         </SelectTrigger>
@@ -158,9 +159,12 @@ export default function WaterBillForm(props: WaterBillFormProps) {
                                     </Select>
                                 </FormControl>
                                 <WargaDialog onSubmit={(member) => {
-                                    if (member.id) {
-                                        form.setValue("memberId", member.id)
-                                    }
+                                    setTimeout(() => {
+                                        if (member.id) {
+                                            form.setValue("memberId", member.id, { shouldValidate: true });
+                                        }
+                                        form.clearErrors();
+                                    }, 200);
                                 }}>
                                     <Button type="button">+</Button>
                                 </WargaDialog>
@@ -267,7 +271,7 @@ export default function WaterBillForm(props: WaterBillFormProps) {
 
 
                 <div className="flex justify-end">
-                    <Button loading={submitting} type="submit">Save changes</Button>
+                    <Button loading={submitting} type="submit" disabled={!form.formState.isValid}>Save changes</Button>
                 </div>
             </form>
         </Form>

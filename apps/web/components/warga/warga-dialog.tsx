@@ -30,8 +30,9 @@ export function WargaDialog({ children, onSubmit }: { children: React.ReactNode,
                         {/* Make changes to your profile here. Click save when you're done. */}
                     </DialogDescription>
                 </DialogHeader>
-                <WargaForm onSubmit={() => {
+                <WargaForm onSubmit={(value) => {
                     setIsOpen(false);
+                    onSubmit?.(value);
                 }} />
             </DialogContent>
         </Dialog>

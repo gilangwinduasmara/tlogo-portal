@@ -20,7 +20,6 @@ export const WaterBillProvider = ({children}: {children: ReactNode}) => {
     const getList = async () => {
         setLoading(true);
         const data = await service.find();
-        console.log(data);
         setList(data);
     }
 
