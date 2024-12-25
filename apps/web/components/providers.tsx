@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
+import { MemberProvider } from "./warga/member-provider"
+import { WaterBillProvider } from "./watter-bill/water-bill-provider"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +14,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
       enableColorScheme
     >
-      {children}
+        <MemberProvider>
+          <WaterBillProvider>
+              {children}
+          </WaterBillProvider>
+        </MemberProvider>
     </NextThemesProvider>
   )
 }
