@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export default function Page() {
   return (
-    <div className="flex items-center justify-center min-h-svh p-3">
+    <div className="flex flex-col items-center justify-center min-h-svh p-3">
       <div className="max-w-md p-4 mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl space-y-3">
         <div className="text-center">
           <div className="font-bold">
@@ -44,6 +44,9 @@ export default function Page() {
             </Button>
           </DeleteDb>
         </div>
+      </div>
+      <div className="text-xs text-foreground/60 mt-3">
+        Powered by <Link href="https://promager.com" className="text-purple-800" target="_blank">Promager.com</Link>
       </div>
     </div>
   )
