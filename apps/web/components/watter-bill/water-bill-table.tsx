@@ -38,6 +38,7 @@ import {
 } from "@workspace/ui/components/table"
 import { WaterBillDialog } from "./water-bill-dialog"
 import { useWaterBill } from "./water-bill-provider"
+import { format } from "date-fns"
 
 
 export const columns: ColumnDef<WaterBill>[] = [
@@ -46,6 +47,13 @@ export const columns: ColumnDef<WaterBill>[] = [
         header: "ID",
         cell: ({ row }) => (
             <div className="capitalize">{row.getValue("id")}</div>
+        ),
+    },
+    {
+        accessorKey: "date",
+        header: "Tanggal",
+        cell: ({ row, cell }) => (
+            <div className="capitalize">{format(cell.getValue() as any, "PPP")}</div>
         ),
     },
     {
@@ -63,6 +71,15 @@ export const columns: ColumnDef<WaterBill>[] = [
             <div className="capitalize">{cell.getValue() as any}</div>
         ),
     },
+    {
+        accessorKey: "consumption",
+        header: "Penggunaan",
+        cell: ({ row, cell }) => (
+            <div className="flex justify-end">
+                <div className="capitalize">{cell.getValue() as any}</div>
+            </div>
+        ),
+    }
 ]
 
 export function WaterBillTable() {

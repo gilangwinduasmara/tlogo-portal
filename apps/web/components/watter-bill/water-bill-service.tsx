@@ -35,6 +35,11 @@ export default {
             }
             return model
         })
+
+        // order by date
+        models = models.sort((a, b) => {
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+        })
         return models;
     },
     update: (id: string, model: WaterBill) => {

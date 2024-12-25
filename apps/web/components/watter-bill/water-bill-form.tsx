@@ -13,13 +13,18 @@ import { useWaterBill } from "./water-bill-provider";
 import { useMember } from "../warga/member-provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { WargaDialog } from "../warga/warga-dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
+import { cn } from "@workspace/ui/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@workspace/ui/components/calendar";
 
 const formSchema = z.object({
     initialReading: z.coerce.number().int().positive(),
     finalReading: z.coerce.number().int().positive(),
     // cannot be "no-data"
     memberId: z.string().nonempty(),
-    date: z.string().nonempty(),
+    date: z.date(),
 });
 
 type WaterBillFormProps = {
@@ -88,9 +93,10 @@ export default function WaterBillForm(props: WaterBillFormProps) {
                 fixedFees: 1000,
             },
             ratePerUnit,
+            date: form.watch('date'),
         }
         return bill;
-    }, [form.watch('initialReading'), form.watch('finalReading')]);
+    }, [form.watch('initialReading'), form.watch('finalReading'), form.watch('memberId'), form.watch('date')]);
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -152,13 +158,54 @@ export default function WaterBillForm(props: WaterBillFormProps) {
                                     </Select>
                                 </FormControl>
                                 <WargaDialog onSubmit={(member) => {
-                                    if(member.id) {
+                                    if (member.id) {
                                         form.setValue("memberId", member.id)
                                     }
                                 }}>
                                     <Button type="button">+</Button>
                                 </WargaDialog>
                             </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>Tanggal</FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-[240px] pl-3 text-left font-normal",
+                                                !field.value && "text-muted-foreground"
+                                            )}
+                                        >
+                                            {field.value ? (
+                                                format(field.value, "PPP")
+                                            ) : (
+                                                <span>Pick a date</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        disabled={(date) =>
+                                            date > new Date() || date < new Date("1900-01-01")
+                                        }
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
                             <FormMessage />
                         </FormItem>
                     )}

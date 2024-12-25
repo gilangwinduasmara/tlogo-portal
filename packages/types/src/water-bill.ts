@@ -20,7 +20,7 @@ type WaterBill = {
     };
     member: Member;
     memberId: string;
-    date: string;
+    date: Date;
 };
 
 export type { WaterBill };
