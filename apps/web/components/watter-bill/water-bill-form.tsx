@@ -238,7 +238,7 @@ export default function WaterBillForm(props: WaterBillFormProps) {
 
                 {
                     form.formState.isValid &&
-                    <div className="bg-gray-100 p-4 rounded-lg text-foreground/60 text-sm">
+                    <div className="light:bg-gray-100 dark:bg-gray-900 border p-4 rounded-lg text-foreground/60 text-sm">
                         <div className="flex justify-between">
                             <div className="font-semibold">Penggunaan 1</div>
                             <div className="font-normal">{waterBill.usageBreakdown?.tier1Volume} x {waterBill.usageBreakdown?.tier1Rate} = {formatCurrency((waterBill.usageBreakdown?.tier1Volume ?? 0) * (waterBill.usageBreakdown?.tier1Rate ?? 0))}</div>

@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useMemo } from "react";
 import { useWaterBill } from "./water-bill-provider";
+import { formatCurrency } from "@workspace/ui/lib/utils";
 
 
 type OverviewCardProps = {
@@ -77,7 +78,7 @@ export default function WaterBillOverview() {
             <div className="grid grid-cols-2 gap-3">
                 <OverviewCard 
                     title="Total Revenue"
-                    value={`Rp. ${currentMonthTotalAmmoutSum}`}
+                    value={formatCurrency(currentMonthTotalAmmoutSum)}
                     growth={(
                         <>
                             <span style={{ color: revenueGrowth > 0 ? 'green' : 'red' }}>
