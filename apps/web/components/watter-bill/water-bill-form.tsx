@@ -14,7 +14,7 @@ import { useMember } from "../warga/member-provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { WargaDialog } from "../warga/warga-dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
-import { cn } from "@workspace/ui/lib/utils";
+import { cn, formatCurrency } from "@workspace/ui/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@workspace/ui/components/calendar";
@@ -54,16 +54,9 @@ export default function WaterBillForm(props: WaterBillFormProps) {
         const initialReading = form.watch('initialReading');
         const finalReading = form.watch('finalReading');
         const consumption = finalReading - initialReading;
-        const ratePerUnit: [number, number, number] = [1000, 2000, 3000];
+        const ratePerUnit: [number, number, number] = [2000, 2500, 3000];
         const baseCharge = 3000;
-
-        // if penggunaan <= 10:
-        //         total = beban + (penggunaan * tarif[0]) + lain_lain
-        //     elif penggunaan <= 20:
-        //         total = beban + (10 * tarif[0]) + ((penggunaan - 10) * tarif[1]) + lain_lain
-        //     else:
-        //         total = beban + (10 * tarif[0]) + (10 * tarif[1]) + ((penggunaan - 20) * tarif[2]) + lain_lain
-
+        const additionalFees = 1000;
 
 
         const tier1Volume = Math.min(consumption, 10);
@@ -74,14 +67,14 @@ export default function WaterBillForm(props: WaterBillFormProps) {
         const tier2Rate = ratePerUnit[1] ?? 0;
         const tier3Rate = ratePerUnit[2] ?? 0;
 
-        const totalAmount = baseCharge + (tier1Volume * tier1Rate) + (tier2Volume * tier2Rate) + (tier3Volume * tier3Rate);
+        const totalAmount = baseCharge + (tier1Volume * tier1Rate) + (tier2Volume * tier2Rate) + (tier3Volume * tier3Rate) + additionalFees;
 
         const bill: Partial<WaterBill> = {
             memberId: form.watch('memberId'),
             initialReading,
             finalReading,
             consumption,
-            additionalFees: 1000,
+            additionalFees,
             totalAmount,
             baseCharge,
             usageBreakdown: {
@@ -91,7 +84,7 @@ export default function WaterBillForm(props: WaterBillFormProps) {
                 tier2Rate,
                 tier3Volume,
                 tier3Rate,
-                fixedFees: 1000,
+                fixedFees: additionalFees,
             },
             ratePerUnit,
             date: form.watch('date'),
@@ -245,26 +238,26 @@ export default function WaterBillForm(props: WaterBillFormProps) {
 
                 {
                     form.formState.isValid &&
-                    <div className="bg-gray-100 p-4 rounded-lg text-foreground/60">
+                    <div className="bg-gray-100 p-4 rounded-lg text-foreground/60 text-sm">
                         <div className="flex justify-between">
-                            <div className="font-semibold text-sm">Penggunaan 1</div>
-                            <div className="font-normal">{waterBill.usageBreakdown?.tier1Volume} x {waterBill.usageBreakdown?.tier1Rate}</div>
+                            <div className="font-semibold">Penggunaan 1</div>
+                            <div className="font-normal">{waterBill.usageBreakdown?.tier1Volume} x {waterBill.usageBreakdown?.tier1Rate} = {formatCurrency((waterBill.usageBreakdown?.tier1Volume ?? 0) * (waterBill.usageBreakdown?.tier1Rate ?? 0))}</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="font-semibold text-sm">Penggunaan 2</div>
-                            <div className="font-normal">{waterBill.usageBreakdown?.tier2Volume} x {waterBill.usageBreakdown?.tier2Rate}</div>
+                            <div className="font-semibold">Penggunaan 2</div>
+                            <div className="font-normal">{waterBill.usageBreakdown?.tier2Volume} x {waterBill.usageBreakdown?.tier2Rate} = {formatCurrency((waterBill.usageBreakdown?.tier2Volume ?? 0) * (waterBill.usageBreakdown?.tier2Rate ?? 0))}</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="font-semibold text-sm">Penggunaan 3</div>
-                            <div className="font-normal">{waterBill.usageBreakdown?.tier3Volume} x {waterBill.usageBreakdown?.tier3Rate}</div>
+                            <div className="font-semibold">Penggunaan 3</div>
+                            <div className="font-normal">{waterBill.usageBreakdown?.tier3Volume} x {waterBill.usageBreakdown?.tier3Rate} = {formatCurrency((waterBill.usageBreakdown?.tier3Volume ?? 0) * (waterBill.usageBreakdown?.tier3Rate ?? 0))}</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="font-semibold text-sm">Lain-lain</div>
-                            <div className="font-normal">{waterBill.baseCharge}</div>
+                            <div className="font-semibold">Lain-lain (Biaya Pelayanan)</div>
+                            <div className="font-normal">{formatCurrency(waterBill.usageBreakdown?.fixedFees ?? 0)}</div>
                         </div>
                         <div className="flex justify-between text-foreground mt-3">
                             <div className="font-semibold">Total Tagihan</div>
-                            <div className="font-bold">{waterBill.totalAmount}</div>
+                            <div className="font-bold">{formatCurrency(waterBill.totalAmount ?? 0)}</div>
                         </div>
                     </div>
                 }

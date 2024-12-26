@@ -34,3 +34,7 @@ npm-debug.log*
 # Misc
 .DS_Store
 *.pem
+
+# Serwist
+public/sw*
+public/swe-worker*

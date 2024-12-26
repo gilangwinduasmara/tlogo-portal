@@ -20,7 +20,7 @@ export default function DeleteDb({children}: {children: React.ReactNode}) {
     }
     return (
         <AlertDialog>
-            <AlertDialogTrigger className="w-full">
+            <AlertDialogTrigger className="w-full" asChild>
                 {children}
             </AlertDialogTrigger>
             <AlertDialogContent>
